@@ -1,54 +1,291 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PEACE FAST</title>
-  <style>
-    body { margin:0; font-family:sans-serif; background:#f6f6f6; color:#333; }
-    .banner { width:100%; height:180px; background:#e91e63; display:flex; align-items:center; justify-content:center; color:#fff; font-size:32px; font-weight:bold; border-bottom-left-radius:20px; border-bottom-right-radius:20px; }
-    h2 { color:#e91e63; margin:20px 15px 10px; font-size:20px; }
-    .carrossel { display:flex; overflow-x:auto; gap:15px; padding:10px 15px; }
-    .card { min-width:150px; background:#fff; border:1px solid #ffebf3; border-radius:15px; padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-    .img { width:100%; height:90px; background:#ffebf3; border-radius:10px; }
-    .btn-green { background:#00c853; color:#fff; border:none; width:100%; padding:6px 0; border-radius:10px; margin-top:8px; }
-    .cats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:0 15px; }
-    .cat { background:#fff; padding:20px 5px; border-radius:15px; text-align:center; border:1px solid #ffebf3; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-    nav { position:fixed; bottom:0; left:0; width:100%; background:#fff; border-top:1px solid #ffebf3; display:flex; justify-content:space-around; padding:8px 0; box-shadow:0 -2px 8px rgba(0,0,0,0.1);}    nav button { background:none; border:none; font-size:12px; color:#555; display:flex; flex-direction:column; align-items:center; }
-    nav button.active { color:#e91e63; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PEACE FAST — Loja</title>
+<style>
+  :root{
+    --rosa:#e91e63; --rosa-claro:#ffebf3; --cinza:#f6f6f6; --verde:#00c853; --texto:#222;
+    --card-shadow: 0 8px 22px rgba(0,0,0,0.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;background:var(--cinza);color:var(--texto);-webkit-font-smoothing:antialiased}
+  .topbar{background:var(--rosa);color:#fff;padding:12px 14px;text-align:center;font-weight:700;position:sticky;top:0;z-index:40}
+  .banner{background:#fff;padding:18px;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center}
+  .banner img{max-width:220px;height:auto;border-radius:8px}
+  .container{max-width:980px;margin:12px auto;padding:0 14px 80px}
+  h2.section-title{color:var(--texto);margin:12px 0;font-size:20px}
+  .row{display:flex;gap:12px;align-items:center}
+  /* carousel */
+  .carousel-wrap{position:relative}
+  .carousel{display:flex;gap:12px;overflow-x:auto;padding:8px 6px 12px;scroll-behavior:smooth}
+  .carousel::-webkit-scrollbar{display:none}
+  .card{min-width:160px;background:#fff;border-radius:12px;padding:12px;box-shadow:var(--card-shadow);border:1px solid rgba(233,30,99,0.06);position:relative;flex-shrink:0}
+  .card .thumb{height:110px;border-radius:8px;background:var(--rosa-claro);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .card .thumb img{width:100%;height:100%;object-fit:cover}
+  .card h3{font-size:14px;margin:8px 0 4px}
+  .price{color:var(--rosa);font-weight:800}
+  .btn{background:var(--verde);color:#fff;border:none;padding:8px;border-radius:10px;width:100%;cursor:pointer;font-weight:700}
+  .fav{position:absolute;right:10px;top:10px;background:#fff;border-radius:50%;padding:6px;box-shadow:0 4px 12px rgba(0,0,0,0.08);cursor:pointer;color:var(--rosa)}
+  .arrow{position:absolute;top:40%;transform:translateY(-50%);background:#fff;border-radius:50%;border:none;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,0.08);cursor:pointer}
+  .arrow.left{left:-8px}
+  .arrow.right{right:-8px}
+  /* categories */
+  .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+  .cat{background:var(--rosa-claro);padding:16px;border-radius:12px;text-align:center;color:var(--rosa);font-weight:700}
+  /* bottom menu */
+  .bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-around;padding:10px 6px;z-index:70}
+  .bottom button{background:none;border:none;color:#666;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .bottom button.active{color:var(--rosa)}
+  /* pages */
+  .page{display:none}
+  .page.active{display:block}
+  /* product page */
+  .product-image{width:100%;height:300px;background:#eee;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .product-image img{width:100%;height:100%;object-fit:cover}
+  .back{background:none;border:none;color:var(--rosa);font-weight:700;margin-bottom:14px;cursor:pointer}
+  /* favorites grid */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  /* small */
+  @media(min-width:900px){.container{padding:0}.card{min-width:220px}}
+</style>
 </head>
 <body>
+  <div class="topbar">PEACE FAST</div>
 
-<div class="banner">PEACE FAST</div>
+  <!-- BANNER: substitua src pela sua imagem se quiser -->
+  <div class="banner">
+    <img id="siteBanner" src="https://files.oaiusercontent.com/file-peacefast-banner.jpg" alt="Banner Peace Fast">
+  </div>
 
-<h2>🔥 Lançamentos</h2>
-<div class="carrossel">
-  <div class="card"><div class="img"></div><p>Produto</p><button class="btn-green">Adicionar</button></div>
-  <div class="card"><div class="img"></div><p>Produto</p><button class="btn-green">Adicionar</button></div>
-</div>
+  <main class="container">
+    <!-- HOME -->
+    <section id="homePage" class="page active">
+      <h2 class="section-title">🔥 Lançamentos</h2>
+      <div class="carousel-wrap">
+        <button class="arrow left" data-target="launchCarousel">◀</button>
+        <div id="launchCarousel" class="carousel"></div>
+        <button class="arrow right" data-target="launchCarousel">▶</button>
+      </div>
 
-<h2>⭐ Destaques</h2>
-<div class="carrossel">
-  <div class="card"><div class="img"></div><p>Produto</p><button class="btn-green">Adicionar</button></div>
-  <div class="card"><div class="img"></div><p>Produto</p><button class="btn-green">Adicionar</button></div>
-</div>
+      <h2 class="section-title">⭐ Destaques</h2>
+      <div class="carousel-wrap">
+        <button class="arrow left" data-target="topCarousel">◀</button>
+        <div id="topCarousel" class="carousel"></div>
+        <button class="arrow right" data-target="topCarousel">▶</button>
+      </div>
 
-<h2>📦 Categorias Populares</h2>
-<div class="cats">
-  <div class="cat">Skincare</div>
-  <div class="cat">Cabelo</div>
-  <div class="cat">Maquiagem</div>
-  <div class="cat">Perfumaria</div>
-  <div class="cat" style="grid-column:span 3;">Higiene Pessoal</div>
-</div>
+      <h2 class="section-title">📦 Categorias Populares</h2>
+      <div class="cats" id="catsArea"></div>
+    </section>
 
-<nav>
-  <button class="active">🏠 Início</button>
-  <button>📦 Pedidos</button>
-  <button>💗 Favoritos</button>
-  <button>👤 Conta</button>
-</nav>
+    <!-- PRODUCT PAGE -->
+    <section id="productPage" class="page">
+      <button class="back" onclick="goHome()">⬅ Voltar</button>
+      <div class="product-image" id="productImage"></div>
+      <h2 id="productName" style="color:var(--rosa);margin-top:12px"></h2>
+      <p id="productDesc" style="margin-top:8px;color:#444"></p>
+      <div id="productPrice" style="margin-top:12px;font-size:22px;font-weight:800;color:var(--verde)"></div>
+      <div style="margin-top:10px">
+        <button id="buyBtn" class="btn">Comprar</button>
+      </div>
+    </section>
+
+    <!-- CATEGORIES PAGE -->
+    <section id="categoriesPage" class="page">
+      <button class="back" onclick="goHome()">⬅ Voltar</button>
+      <h2 class="section-title" style="margin-top:8px">Categorias</h2>
+      <div class="cats" id="categoriesList"></div>
+    </section>
+
+    <!-- FAVORITES -->
+    <section id="favoritesPage" class="page">
+      <button class="back" onclick="goHome()">⬅ Voltar</button>
+      <h2 class="section-title" style="margin-top:8px">Favoritos</h2>
+      <div id="favoritesList" class="grid-2"></div>
+      <p id="noFavoritesMsg" style="color:#666;margin-top:10px"></p>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section id="accountPage" class="page">
+      <button class="back" onclick="goHome()">⬅ Voltar</button>
+      <h2 class="section-title" style="margin-top:8px">Minha Conta</h2>
+      <div style="display:grid;gap:10px">
+        <div style="background:#fff;padding:12px;border-radius:10px">Meus Dados</div>
+        <div style="background:#fff;padding:12px;border-radius:10px">Meus Pedidos</div>
+        <div style="background:#fff;padding:12px;border-radius:10px">Endereços</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MENU INFERIOR -->
+  <nav class="bottom">
+    <button id="btnHome" class="active" onclick="openPage('homePage')">🏠<small>Início</small></button>
+    <button id="btnFavorites" onclick="openPage('favoritesPage')">💗<small>Favoritos</small></button>
+    <button id="btnCategories" onclick="openPage('categoriesPage')">📦<small>Categorias</small></button>
+    <button id="btnAccount" onclick="openPage('accountPage')">👤<small>Conta</small></button>
+  </nav>
+
+<script>
+/*
+  INSTRUÇÕES RÁPIDAS:
+  - Para adicionar / editar produtos: edite o array `PRODUCTS` abaixo (campo image, affiliate, price, name, description, category).
+  - Campo `affiliate` deve ser o link do Mercado Livre (ou qualquer link) — o botão Comprar abrirá esse link.
+  - Se quiser trocar o banner, altere o src do elemento #siteBanner.
+*/
+
+/* === DADOS DOS PRODUTOS === */
+const PRODUCTS = [
+  { id:"p1", name:"Principia Creme Calmante CM-01", price:"R$ 42,31", image:"", affiliate:"", description:"Creme calmante indicado para peles sensíveis.", category:"Skincare"},
+  { id:"p2", name:"Sérum Verde", price:"R$ 79,00", image:"", affiliate:"", description:"Sérum antioxidante.", category:"Skincare"},
+  { id:"p3", name:"Principia Sérum Mix-01", price:"R$ 64,00", image:"", affiliate:"", description:"Mix de ativos para pele.", category:"Skincare"},
+  // adicione quantos quiser seguindo o mesmo formato
+];
+
+/* === CATEGORIAS === */
+const CATEGORIES = ["Skincare","Cabelo","Maquiagem","Perfumaria","Higiene Pessoal"];
+
+/* === ESTADO === */
+let favorites = JSON.parse(localStorage.getItem('pf_favs')||'[]');
+
+function saveFavs(){ localStorage.setItem('pf_favs', JSON.stringify(favorites)); }
+
+/* === RENDER HELPERS === */
+function el(tag, attrs={}, children=[]){ const e=document.createElement(tag); for(let k in attrs) if(k==='html') e.innerHTML=attrs[k]; else e.setAttribute(k, attrs[k]); (Array.isArray(children)?children:[children]).forEach(c=>{ if(c==null) return; if(typeof c==='string') e.appendChild(document.createTextNode(c)); else e.appendChild(c); }); return e; }
+
+function renderCard(product){
+  const card = el('div',{class:'card'});
+  const fav = el('div',{class:'fav', title:'Favoritar'}, ['❤']);
+  fav.onclick = (ev)=>{ ev.stopPropagation(); toggleFavorite(product.id); renderAll(); };
+  card.appendChild(fav);
+
+  const thumb = el('div',{class:'thumb'});
+  if(product.image) {
+    const img = el('img',{src:product.image, alt:product.name});
+    thumb.appendChild(img);
+  } else {
+    thumb.appendChild(el('div',{style:'padding:10px;text-align:center;color:var(--rosa);font-weight:700'}, [product.name.split(' ').slice(0,2).join(' ')]));
+  }
+  card.appendChild(thumb);
+  card.appendChild(el('h3',{}, [product.name]));
+  card.appendChild(el('div',{class:'price'}, [product.price]));
+  const btn = el('button',{class:'btn'}, ['Comprar']);
+  btn.onclick = (ev)=>{ ev.stopPropagation(); openAffiliate(product); };
+  card.appendChild(btn);
+  card.onclick = ()=> openProduct(product.id);
+  return card;
+}
+
+function openAffiliate(product){
+  if(!product.affiliate){ alert('Link de afiliado não definido ainda.'); return; }
+  window.open(product.affiliate, '_blank');
+}
+
+/* === RENDER SECTIONS === */
+function renderCarousels(){
+  const launch = document.getElementById('launchCarousel');
+  const top = document.getElementById('topCarousel');
+  launch.innerHTML = ''; top.innerHTML = '';
+  // Example: first half as launches, all as highlights (customize as you like)
+  PRODUCTS.slice(0,6).forEach(p=> launch.appendChild(renderCard(p)));
+  PRODUCTS.forEach(p=> top.appendChild(renderCard(p)));
+}
+
+function renderCategories(){
+  const area = document.getElementById('catsArea');
+  area.innerHTML = '';
+  CATEGORIES.forEach(c=> area.appendChild(el('div',{class:'cat'}, [c])));
+  // categories page
+  const list = document.getElementById('categoriesList');
+  list.innerHTML = '';
+  CATEGORIES.forEach(c=> list.appendChild(el('div',{class:'cat'}, [c])));
+}
+
+function renderFavorites(){
+  const container = document.getElementById('favoritesList'), msg=document.getElementById('noFavoritesMsg');
+  container.innerHTML=''; msg.textContent='';
+  if(favorites.length===0){ msg.textContent='Nenhum item salvo ainda.'; return; }
+  favorites.forEach(id=>{
+    const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
+    const c = el('div',{class:'card'},[]);
+    const thumb = el('div',{class:'thumb'}); if(p.image){ thumb.appendChild(el('img',{src:p.image})); } else thumb.appendChild(el('div',{style:'padding:10px'},[p.name]));
+    c.appendChild(thumb); c.appendChild(el('h3',{},[p.name])); c.appendChild(el('div',{class:'price'},[p.price]));
+    c.onclick = ()=> openProduct(p.id);
+    container.appendChild(c);
+  });
+}
+
+/* === NAVIGATION / SPA === */
+function openPage(pageId){
+  document.querySelectorAll('.page').forEach(s=> s.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));
+  if(pageId==='homePage') document.getElementById('btnHome').classList.add('active');
+  if(pageId==='favoritesPage') document.getElementById('btnFavorites').classList.add('active');
+  if(pageId==='categoriesPage') document.getElementById('btnCategories').classList.add('active');
+  if(pageId==='accountPage') document.getElementById('btnAccount').classList.add('active');
+  if(pageId==='favoritesPage') renderFavorites();
+}
+
+function goHome(){ openPage('homePage'); }
+
+/* === PRODUCT VIEW === */
+function openProduct(id){
+  const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
+  document.getElementById('productImage').innerHTML = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div style="padding:10px">${p.name}</div>`;
+  document.getElementById('productName').textContent = p.name;
+  document.getElementById('productDesc').textContent = p.description || '';
+  document.getElementById('productPrice').textContent = p.price;
+  document.getElementById('buyBtn').onclick = ()=> openAffiliate(p);
+  openPage('productPage');
+}
+
+/* === FAVORITES === */
+function toggleFavorite(id){
+  if(favorites.includes(id)) favorites = favorites.filter(x=>x!==id); else favorites.push(id);
+  saveFavs(); renderAll();
+}
+
+/* === CAROUSEL ARROWS === */
+document.addEventListener('click', function(e){
+  const t = e.target.closest('.arrow');
+  if(!t) return;
+  const targetId = t.getAttribute('data-target');
+  const wrap = document.getElementById(targetId);
+  if(!wrap) return;
+  const w = wrap.clientWidth;
+  if(t.classList.contains('left')) wrap.scrollBy({left:-w/1.6, behavior:'smooth'}); else wrap.scrollBy({left:w/1.6, behavior:'smooth'});
+});
+
+/* === AUTO SLIDE (small) === */
+setInterval(()=> {
+  // gently auto-scroll highlights by 1 card-width
+  const elTop = document.getElementById('topCarousel');
+  if(elTop && elTop.children.length>0){
+    const step = elTop.children[0].clientWidth + 12;
+    elTop.scrollBy({left: step, behavior: 'smooth'});
+    if(elTop.scrollLeft + elTop.clientWidth >= elTop.scrollWidth - 10) elTop.scrollLeft = 0;
+  }
+}, 4200);
+
+/* === INIT RENDER === */
+function renderAll(){
+  renderCarousels();
+  renderCategories();
+  renderFavorites();
+}
+renderAll();
+
+/* === QUICK HELP: como editar produtos (pelo celular)
+ - Abra esse arquivo index.html no editor do GitHub (Add file → Create/Update file).
+ - Procure a seção PRODUCTS no topo do script.
+ - Para cada produto adicione:
+    { id:"p4", name:"Nome", price:"R$ 10,00", image:"https://link-da-imagem.jpg", affiliate:"https://link-de-afiliado", description:"Texto", category:"Skincare" }
+ - Salve. O botão Comprar abrirá o link do campo affiliate.
+ - Se o GitHub Pages estiver mostrando o código em vez do site: substitua o arquivo index.html corretamente no repositório (Delete → Add file → upload/paste) e aguarde 1-2 minutos e atualize (limpe cache se necessário).
+*/
+</script>
 
 </body>
-</html>
+        </html>
